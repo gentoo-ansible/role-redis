@@ -1,0 +1,64 @@
+---
+# The network address to bind to.
+# @name bind
+redis_bind_address: '0.0.0.0'
+
+# The port number to listen on. If 0, then not listen on a TCP socket.
+# @name port
+redis_port: 6379
+
+# Path of the unix socket that will be used to listen for incoming connections.
+# If empty, then redis will not listen on a socket.
+# @name unixsocket
+redis_socket_path: /run/redis/redis.sock
+
+# Permissions mode (aka chmod) of the unix socket file.
+# @name unixsocketperm
+redis_socket_perm: '770'
+
+# Path of the file where to dump the DB.
+# @name dir, dbfilename
+redis_db_path: /var/lib/redis/dump.rdb
+
+# The number of databases.
+# @name databases
+redis_databases: 16
+
+# A list of [<second>, <changes>] that defines when to save the database.
+# Will save the DB if both the given number of seconds and the given number of
+# write operations against the DB occurred.
+# @name save
+redis_database_save_times:
+  - [900, 1]
+  - [300, 10]
+  - [60, 10000]
+
+# The maximum number of connected clients at the same time.
+# @name maxclients
+redis_max_clients: 128
+
+# The maximum amount of memory in bytes Redis can allocate.
+# When the memory limit is reached Redis will try to remove keys accordingly to
+# the eviction policy selected (see maxmemmory-policy).
+# @allowed <number>(|k|kb|m|mb|g|gb)
+# @name maxmemory
+redis_max_memory: 64mb
+
+# The maximum memory policy; how Redis will select what to remove when
+# maxmemory is reached.
+# @allowed volatile-lru, allkeys-lru, volatile-random, allkeys-random,
+#          volatile-ttl, noeviction
+# @name maxmemory-policy
+redis_max_memory_policy: volatile-lru
+
+# The password clients must to issue before processing any other commands.
+# If empty then client authentication will be disabled (default).
+# @name requirepass
+redis_password: ''
+
+# Should Redis log to syslog?
+# Otherwise Redis will log to a file (see {{redis_log_file}}).
+redis_syslog_enabled: false
+
+# Path of the log file. Ignored if {{redis_syslog_enabled}} is yes.
+redis_log_file: /var/log/redis/redis.log

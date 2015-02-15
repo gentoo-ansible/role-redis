@@ -1,0 +1,23 @@
+---
+- name: install dev-db/redis
+  portage: package=dev-db/redis
+  tags: packages
+
+- name: configure redis
+  template: >
+    src=redis.conf.j2
+    dest=/etc/redis.conf
+  notify: restart redis
+  tags: config
+
+- name: enable system overcommit memory
+  sysctl: >
+    name=vm.overcommit_memory
+    value=1
+
+- name: enable and start redis
+  service: >
+    name=redis
+    enabled=yes
+    state=started
+  tags: services
