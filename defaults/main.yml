@@ -1,4 +1,7 @@
 ---
+# Name of this redis instance.
+redis_instance_name: 'redis'
+
 # The network address to bind to.
 # @name bind
 redis_bind_address: '0.0.0.0'
@@ -10,7 +13,7 @@ redis_port: 6379
 # Path of the unix socket that will be used to listen for incoming connections.
 # If empty, then redis will not listen on a socket.
 # @name unixsocket
-redis_socket_path: /run/redis/redis.sock
+redis_socket_path: "/run/redis/{{ redis_instance_name }}.sock"
 
 # Permissions mode (aka chmod) of the unix socket file.
 # @name unixsocketperm
@@ -18,7 +21,7 @@ redis_socket_perm: '770'
 
 # Path of the file where to dump the DB.
 # @name dir, dbfilename
-redis_db_path: /var/lib/redis/dump.rdb
+redis_db_path: "/var/lib/redis/{{ redis_instance_name }}.rdb"
 
 # The number of databases.
 # @name databases
@@ -61,4 +64,7 @@ redis_password: ''
 redis_syslog_enabled: false
 
 # Path of the log file. Ignored if {{redis_syslog_enabled}} is yes.
-redis_log_file: /var/log/redis/redis.log
+redis_log_file: "/var/log/redis/{{ redis_instance_name }}.log"
+
+# This should not be changed.
+redis_service_name: "{{ 'redis.' + redis_instance_name if redis_instance_name != 'redis' else 'redis' }}"

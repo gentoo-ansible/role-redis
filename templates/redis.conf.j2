@@ -93,7 +93,7 @@ logfile {{ '/dev/null' if redis_syslog_enabled | bool else redis_log_file }}
 syslog-enabled {{ 'yes' if redis_syslog_enabled | bool else 'no' }}
 
 # Specify the syslog identity.
-syslog-ident redis
+syslog-ident {{ redis_service_name }}
 
 # Specify the syslog facility. Must be USER or between LOCAL0-LOCAL7.
 # syslog-facility local0

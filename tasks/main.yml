@@ -3,12 +3,29 @@
   portage: package=dev-db/redis
   tags: packages
 
+- name: remove default config file
+  file: >
+    state=absent
+    path=/etc/redis.conf
+
+- name: create config directory
+  file: >
+    state=directory
+    path=/etc/redis
+    owner=root group=root mode=0755
+
 - name: configure redis
   template: >
     src=redis.conf.j2
-    dest=/etc/redis.conf
+    dest=/etc/redis/{{ redis_instance_name }}.conf
   notify: restart redis
   tags: config
+
+- name: configure runscript
+  template: >
+    src=runscript.conf.j2
+    dest=/etc/conf.d/{{ redis_service_name }}
+    owner=root group=root mode=0644
 
 - name: enable system overcommit memory
   sysctl: >
@@ -17,9 +34,17 @@
   when: not ansible_virtualization_type in ['lxc', 'openvz']
   tags: config
 
-- name: enable and start redis
+- name: symlink runscript for this instance
+  file: >
+    state=link
+    src=/etc/init.d/redis
+    dest=/etc/init.d/{{ redis_service_name }}
+    force=yes
+  when: redis_service_name != 'redis'
+
+- name: enable and start specified Redis instance
   service: >
-    name=redis
+    name={{ redis_service_name }}
     enabled=yes
     state=started
   tags: services
